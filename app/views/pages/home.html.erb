@@ -1,0 +1,47 @@
+<div class="min-h-screen flex flex-col items-center justify-center -mt-28">
+  <!-- Hero Section -->
+  <div class="text-center max-w-4xl px-4">
+    <!-- Icon/Logo -->
+    <div class="mb-8">
+      <div class="inline-block text-8xl">🎁</div>
+    </div>
+
+    <!-- Heading -->
+    <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+      Secret Santa Made Simple
+    </h1>
+
+    <!-- Subheading -->
+    <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
+      Organize your gift exchange effortlessly. Create an event, invite participants, and let the magic happen.
+    </p>
+
+    <!-- CTA Button -->
+    <div class="mb-12">
+      <%= link_to new_event_path, class: "inline-block bg-red-600 hover:bg-red-700 text-white font-semibold text-lg px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105" do %>
+        Create Your Secret Santa
+      <% end %>
+    </div>
+
+    <!-- Features -->
+    <div class="grid md:grid-cols-3 gap-8 mt-16 text-left">
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="text-4xl mb-4">✨</div>
+        <h3 class="text-lg font-semibold mb-2">Easy Setup</h3>
+        <p class="text-gray-600">Create your event in minutes. Add participants, set budget and date.</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="text-4xl mb-4">🔐</div>
+        <h3 class="text-lg font-semibold mb-2">Secure & Private</h3>
+        <p class="text-gray-600">Passwordless login with magic links. Your assignments stay secret.</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="text-4xl mb-4">🎨</div>
+        <h3 class="text-lg font-semibold mb-2">Customizable</h3>
+        <p class="text-gray-600">Personalize your event with themes and custom messages.</p>
+      </div>
+    </div>
+  </div>
+</div>
