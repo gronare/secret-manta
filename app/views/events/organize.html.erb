@@ -72,10 +72,13 @@
     <h2 class="text-2xl font-bold text-gray-900 mb-6">Ready to Start?</h2>
     <p class="text-gray-600 mb-6">Once you've added all participants, you can draw names and send invitations.</p>
 
-    <% if @participants.count >= 3 %>
-      <button class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors">
-        Draw Names & Send Invitations
-      </button>
+    <% if @event.assignments_drawn? %>
+      <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4">
+        ✓ Assignments have been drawn! Participants can now view their assigned person.
+      </div>
+      <%= button_to "Reshuffle Assignments", draw_assignments_event_path(@event), method: :post, class: "w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors", data: { turbo_confirm: "This will create new assignments for everyone. Continue?" } %>
+    <% elsif @participants.count >= 3 %>
+      <%= button_to "Draw Names & Send Invitations", draw_assignments_event_path(@event), method: :post, class: "w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors" %>
     <% else %>
       <button disabled class="w-full bg-gray-300 text-gray-500 font-semibold py-4 px-6 rounded-lg cursor-not-allowed">
         Add at least <%= 3 - @participants.count %> more participant<%= 's' if (3 - @participants.count) != 1 %>

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :events, only: [ :new, :create, :show ] do
     member do
       get :organize
+      post :draw_assignments
     end
 
     resources :participants, only: [ :create, :destroy ]

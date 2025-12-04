@@ -52,6 +52,6 @@ class EventTest < ActiveSupport::TestCase
 
   test "fixture event has associations" do
     event = events(:christmas_2024)
-    assert_equal 2, event.participants.count
+    assert_equal 3, event.participants.count
   end
 end

@@ -14,6 +14,13 @@ bob:
   assigned_to_id:
   is_organizer: false
 
+carol:
+  event: christmas_2024
+  name: Carol White
+  email: carol@example.com
+  assigned_to_id:
+  is_organizer: false
+
 charlie:
   event: new_year_2025
   name: Charlie Brown

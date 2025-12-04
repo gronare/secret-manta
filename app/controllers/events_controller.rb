@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [ :show, :organize ]
+  before_action :set_event, only: [ :show, :organize, :draw_assignments ]
 
   def new
     @event = Event.new
@@ -27,13 +27,27 @@ class EventsController < ApplicationController
   end
 
   def show
-    # Modern Rails: Eager load to prevent N+1 queries
-    @participant = current_participant || @event.participants.find_by(id: session[:participant_id])
+    # HEY pattern: Access Current directly, no helper method
+    @participant = Current.participant
   end
 
   def organize
     # Modern Rails: Strict loading prevents N+1, includes for eager loading
     @participants = @event.participants.strict_loading(false).order(created_at: :asc)
+  end
+
+  def draw_assignments
+    # HEY pattern: Service object handles complex business logic
+    SecretSanta::AssignmentService.new(@event).call
+
+    respond_to do |format|
+      format.html { redirect_to organize_event_path(@event), notice: "Assignments drawn! Participants can now view their assignments." }
+      format.turbo_stream
+    end
+  rescue SecretSanta::AssignmentService::InsufficientParticipantsError => e
+    redirect_to organize_event_path(@event), alert: e.message
+  rescue SecretSanta::AssignmentService::AlreadyAssignedError => e
+    redirect_to organize_event_path(@event), alert: e.message
   end
 
   private

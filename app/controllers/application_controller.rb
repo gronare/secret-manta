@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
-  # Modern Rails: Set Current attributes for request-scoped data
+  # HEY/Basecamp pattern: Set Current attributes for request-scoped data
   before_action :set_current_attributes
   before_action :set_current_participant, if: :participant_session?
 
@@ -24,18 +24,9 @@ class ApplicationController < ActionController::Base
     session[:participant_id].present?
   end
 
-  def current_participant
-    Current.participant
-  end
-  helper_method :current_participant
-
-  def current_event
-    Current.event
-  end
-  helper_method :current_event
-
+  # HEY pattern: No helper wrappers, access Current directly in views
   def require_participant!
-    unless current_participant
+    unless Current.participant
       redirect_to root_path, alert: "Please log in to continue"
     end
   end
