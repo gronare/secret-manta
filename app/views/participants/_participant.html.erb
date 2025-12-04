@@ -1,0 +1,20 @@
+<div id="<%= dom_id(participant) %>" class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+  <div>
+    <p class="font-semibold text-gray-900"><%= participant.name %></p>
+    <p class="text-sm text-gray-600"><%= participant.email %></p>
+  </div>
+  <div class="flex items-center gap-2">
+    <% if participant.is_organizer %>
+      <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+        You
+      </span>
+    <% else %>
+      <%= button_to event_participant_path(participant.event, participant),
+          method: :delete,
+          data: { turbo: true, turbo_confirm: "Remove #{participant.name}?" },
+          class: "text-red-600 hover:text-red-700 font-semibold text-sm" do %>
+        Remove
+      <% end %>
+    <% end %>
+  </div>
+</div>

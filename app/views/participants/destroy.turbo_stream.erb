@@ -1,0 +1,5 @@
+<%= turbo_stream.remove dom_id(@participant) %>
+
+<%= turbo_stream.update "participant-count" do %>
+  <%= @event.participants.count %>
+<% end %>

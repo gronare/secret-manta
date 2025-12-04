@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     member do
       get :organize
     end
+
+    resources :participants, only: [ :create, :destroy ]
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

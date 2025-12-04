@@ -1,0 +1,11 @@
+<%= turbo_stream.append "participants-list" do %>
+  <%= render "participants/participant", participant: @participant %>
+<% end %>
+
+<%= turbo_stream.replace "participant_form" do %>
+  <%= render "participants/form", event: @event, participant: Participant.new %>
+<% end %>
+
+<%= turbo_stream.update "participant-count" do %>
+  <%= @event.participants.count %>
+<% end %>
