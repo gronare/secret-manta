@@ -1,0 +1,6 @@
+<%= turbo_stream.update "draw-actions" do %>
+  <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4">
+    ✓ Assignments have been drawn! Participants can now view their assigned person.
+  </div>
+  <%= button_to "Reshuffle Assignments", draw_assignments_event_path(@event), method: :post, class: "w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors", data: { turbo_confirm: "This will create new assignments for everyone. Continue?" } %>
+<% end %>
