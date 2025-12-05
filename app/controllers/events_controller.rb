@@ -9,18 +9,18 @@ class EventsController < ApplicationController
     @event = Event.new(event_params)
 
     if @event.save
-      # Create organizer as first participant
       organizer = @event.participants.create!(
         name: @event.organizer_name,
         email: @event.organizer_email,
         is_organizer: true
       )
 
-      # Set Current for tracking
       Current.participant = organizer
       Current.event = @event
 
-      redirect_to organize_event_path(@event), notice: "Event created successfully!"
+      EventMailer.organizer_welcome(@event).deliver_later
+
+      redirect_to organize_event_path(@event), notice: "Event created! Check your email for the magic link."
     else
       render :new, status: :unprocessable_entity
     end
@@ -45,8 +45,12 @@ class EventsController < ApplicationController
     SecretSanta::AssignmentService.new(@event).call
     @event.launch!
 
+    @event.participants.each do |participant|
+      ParticipantMailer.invitation(participant).deliver_later
+    end
+
     respond_to do |format|
-      format.html { redirect_to organize_event_path(@event), notice: "Event launched! Invitations will be sent to participants." }
+      format.html { redirect_to organize_event_path(@event), notice: "Event launched! Invitations sent to all participants." }
       format.turbo_stream
     end
   rescue SecretSanta::AssignmentService::InsufficientParticipantsError => e
