@@ -3,7 +3,7 @@ class Event < ApplicationRecord
   has_many :participants, dependent: :destroy, strict_loading: true
 
   # Modern Rails: Normalize email to lowercase and strip whitespace
-  normalizes :organizer_email, with: -> email { email.strip.downcase }
+  normalizes :organizer_email, with: ->(email) { email.strip.downcase }
 
   # Validations
   validates :name, presence: true

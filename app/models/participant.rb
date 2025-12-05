@@ -6,7 +6,7 @@ class Participant < ApplicationRecord
   has_many :wishlist_items, dependent: :destroy
 
   # Modern Rails: Normalize email to lowercase and strip whitespace
-  normalizes :email, with: -> email { email.strip.downcase }
+  normalizes :email, with: ->(email) { email.strip.downcase }
 
   # Validations
   validates :name, presence: true
