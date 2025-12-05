@@ -24,18 +24,30 @@ class SessionsController < ApplicationController
   end
 
   def authenticate
-    # Modern Rails: find_by_token_for verifies and validates the token
     @participant = Participant.find_by_token_for(:magic_link, params[:token])
 
     if @participant
-      # Set session using Current attributes
       session[:participant_id] = @participant.id
       Current.participant = @participant
 
-      redirect_to event_path(@participant.event), notice: "Successfully signed in!"
-    else
-      redirect_to root_path, alert: "Invalid or expired magic link. Please request a new one."
+      redirect_path = @participant.organizer? ? organize_event_path(@participant.event) : event_path(@participant.event)
+      redirect_to redirect_path, notice: "Successfully signed in!"
+      return
     end
+
+    Event.find_each do |event|
+      if event.find_by_token_for(:organizer_access, params[:token])
+        organizer = event.organizer
+        if organizer
+          session[:participant_id] = organizer.id
+          Current.participant = organizer
+          redirect_to organize_event_path(event), notice: "Welcome back!"
+          return
+        end
+      end
+    end
+
+    redirect_to root_path, alert: "Invalid or expired magic link. Please request a new one."
   end
 
   def destroy
