@@ -1,13 +1,14 @@
 Rails.application.routes.draw do
   root "pages#home"
 
-  # Modern Rails: Resource routing with custom actions
   resources :events, only: [ :new, :create, :show ] do
     member do
       get :organize
       post :draw_assignments
+      post :launch
     end
 
+    resource :settings, controller: "event_settings", only: [ :edit, :update ]
     resources :participants, only: [ :create, :destroy ]
   end
 

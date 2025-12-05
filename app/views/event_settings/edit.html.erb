@@ -1,0 +1,106 @@
+<div class="max-w-2xl mx-auto">
+  <div class="mb-8">
+    <%= link_to organize_event_path(@event), class: "text-gray-600 hover:text-gray-900" do %>
+      ← Back to event
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg p-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Event Settings</h1>
+    <p class="text-gray-600 mb-8">Customize your Secret Santa event</p>
+
+    <%= form_with model: @event, url: event_settings_path(@event), method: :patch, class: "space-y-8" do |f| %>
+      <% if @event.errors.any? %>
+        <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+          <h3 class="font-semibold mb-2"><%= pluralize(@event.errors.count, "error") %> prohibited saving:</h3>
+          <ul class="list-disc list-inside">
+            <% @event.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="border-b pb-6">
+        <h2 class="text-xl font-semibold mb-4">Theme</h2>
+        <p class="text-sm text-gray-600 mb-4">Choose a visual theme for your event</p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <% [
+            ["christmas", "🎄 Christmas", "from-red-50 to-green-50"],
+            ["hanukkah", "🕎 Hanukkah", "from-blue-50 to-white"],
+            ["winter", "❄️ Winter", "from-blue-50 to-slate-50"],
+            ["generic", "🎁 Generic", "from-gray-50 to-gray-100"]
+          ].each do |value, label, gradient| %>
+            <label class="relative cursor-pointer">
+              <%= f.radio_button :theme, value, class: "peer sr-only" %>
+              <div class="border-2 border-gray-300 rounded-lg p-4 text-center peer-checked:border-red-500 peer-checked:ring-2 peer-checked:ring-red-500 peer-checked:bg-red-50 transition-all bg-gradient-to-br <%= gradient %>">
+                <div class="text-2xl mb-2"><%= label.split.first %></div>
+                <div class="text-sm font-medium text-gray-700"><%= label.split[1..].join(" ") %></div>
+              </div>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="border-b pb-6">
+        <h2 class="text-xl font-semibold mb-4">Custom Message</h2>
+        <p class="text-sm text-gray-600 mb-4">Add a personal message that participants will see</p>
+
+        <%= f.text_area :custom_message,
+          rows: 4,
+          placeholder: "Example: Looking forward to celebrating with everyone! Remember to keep gifts under budget.",
+          class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent" %>
+      </div>
+
+      <div class="border-b pb-6">
+        <h2 class="text-xl font-semibold mb-4">Participant Requirements</h2>
+        <p class="text-sm text-gray-600 mb-4">Choose what information to collect from participants</p>
+
+        <div class="space-y-3">
+          <label class="flex items-start">
+            <%= f.check_box :require_wishlist, class: "mt-1 h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500" %>
+            <span class="ml-3">
+              <span class="block font-medium text-gray-700">Require Wishlist</span>
+              <span class="block text-sm text-gray-500">Participants must add wishlist items</span>
+            </span>
+          </label>
+
+          <label class="flex items-start">
+            <%= f.check_box :require_address, class: "mt-1 h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500" %>
+            <span class="ml-3">
+              <span class="block font-medium text-gray-700">Require Shipping Address</span>
+              <span class="block text-sm text-gray-500">Participants must provide mailing address</span>
+            </span>
+          </label>
+
+          <label class="flex items-start">
+            <%= f.check_box :require_rsvp, class: "mt-1 h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500" %>
+            <span class="ml-3">
+              <span class="block font-medium text-gray-700">Require RSVP</span>
+              <span class="block text-sm text-gray-500">Track who plans to participate</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="pb-6">
+        <h2 class="text-xl font-semibold mb-4">Organizer Participation</h2>
+        <p class="text-sm text-gray-600 mb-4">Will you participate in the gift exchange?</p>
+
+        <label class="flex items-start">
+          <%= f.check_box :organizer_participates, class: "mt-1 h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500" %>
+          <span class="ml-3">
+            <span class="block font-medium text-gray-700">I want to participate</span>
+            <span class="block text-sm text-gray-500">You'll be included in the gift exchange and assigned someone</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="flex gap-4">
+        <%= f.submit "Save Settings", class: "flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors cursor-pointer" %>
+        <%= link_to "Cancel", organize_event_path(@event), class: "px-6 py-3 text-gray-700 hover:text-gray-900 font-semibold" %>
+      </div>
+    <% end %>
+  </div>
+</div>
