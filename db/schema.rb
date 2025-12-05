@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_05_211956) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_05_221648) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,7 +28,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_05_211956) do
     t.boolean "organizer_participates", default: true, null: false
     t.boolean "require_address", default: false, null: false
     t.boolean "require_rsvp", default: false, null: false
-    t.boolean "require_wishlist", default: false, null: false
+    t.boolean "require_wishlist", default: true, null: false
     t.string "slug"
     t.string "status", default: "draft", null: false
     t.string "theme", default: "christmas"
