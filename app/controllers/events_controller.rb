@@ -32,11 +32,11 @@ class EventsController < ApplicationController
   end
 
   def organize
-    @participants = @event.participants.strict_loading(false).order(created_at: :asc)
+    @participants = @event.participants.order(created_at: :asc)
   end
 
   def dashboard
-    @participants = @event.participants.includes(:wishlist_items).order(created_at: :asc)
+    @participants = @event.participants.order(created_at: :asc)
   end
 
   def send_reminder
@@ -83,8 +83,17 @@ class EventsController < ApplicationController
   private
 
   def set_event
-    # Modern Rails: includes for eager loading associations
-    @event = Event.includes(:participants).find_by!(slug: params[:id])
+    action_name = params[:action].to_sym
+
+    case action_name
+    when :dashboard
+      @event = Event.includes(participants: :wishlist_items).find_by!(slug: params[:id])
+    when :organize, :launch, :send_reminder
+      @event = Event.includes(:participants).find_by!(slug: params[:id])
+    else
+      @event = Event.find_by!(slug: params[:id])
+    end
+
     Current.event = @event
   end
 
