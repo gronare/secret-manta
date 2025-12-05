@@ -12,8 +12,6 @@ class Event < ApplicationRecord
   validates :status, presence: true
   validates :theme, inclusion: { in: %w[christmas hanukkah winter generic] }, allow_nil: true
 
-  generates_token_for :organizer_access, expires_in: 24.hours
-
   before_validation :generate_slug, on: :create
 
   scope :recent, -> { order(created_at: :desc) }
