@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_04_195812) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_05_211956) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,15 +20,23 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_04_195812) do
     t.text "custom_message"
     t.text "description"
     t.date "event_date"
+    t.datetime "launched_at"
     t.string "location"
     t.string "name"
     t.string "organizer_email"
     t.string "organizer_name"
+    t.boolean "organizer_participates", default: true, null: false
+    t.boolean "require_address", default: false, null: false
+    t.boolean "require_rsvp", default: false, null: false
+    t.boolean "require_wishlist", default: false, null: false
     t.string "slug"
+    t.string "status", default: "draft", null: false
+    t.string "theme", default: "christmas"
     t.string "theme_primary_color"
     t.string "theme_secondary_color"
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_events_on_slug", unique: true
+    t.index ["status"], name: "index_events_on_status"
   end
 
   create_table "login_tokens", force: :cascade do |t|
