@@ -1,14 +1,14 @@
-<header class="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
+<header class="bg-white shadow-md fixed top-0 left-0 right-0 z-50" data-controller="mobile-menu">
   <div class="max-w-7xl mx-auto px-4 py-4">
     <div class="flex items-center justify-between">
       <!-- Logo/Home Link -->
       <%= link_to root_path, class: "flex items-center gap-2 text-gray-900 hover:text-red-600 transition-colors" do %>
         <span class="text-2xl">🎁</span>
-        <span class="text-xl font-bold">Secret Santa</span>
+        <span class="text-base sm:text-xl font-bold">Secret Santa</span>
       <% end %>
 
-      <!-- Navigation -->
-      <nav class="flex items-center gap-4">
+      <!-- Desktop Navigation - Hidden on mobile -->
+      <nav class="hidden md:flex items-center gap-4">
         <% if Current.participant %>
           <!-- Event Switcher (only show if user has multiple events) -->
           <% user_participants = Current.participant.user.participants.includes(:event).order("events.created_at DESC") %>
@@ -38,6 +38,81 @@
           <%= button_to "Sign Out", session_path, method: :delete, class: "text-red-600 hover:text-red-700 font-medium" %>
         <% else %>
           <%= link_to "Create Event", new_event_path, class: "bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors" %>
+        <% end %>
+      </nav>
+
+      <!-- Mobile Hamburger Button -->
+      <button type="button" data-action="click->mobile-menu#toggle" class="md:hidden p-2 text-gray-700 hover:text-gray-900">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div data-mobile-menu-target="overlay" data-action="click->mobile-menu#close" class="hidden fixed inset-0 bg-black/50 z-40"></div>
+
+  <!-- Mobile Menu Slide-out -->
+  <div data-mobile-menu-target="menu" class="fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+    <div class="flex flex-col h-full">
+      <!-- Close Button -->
+      <div class="flex justify-end p-4 border-b">
+        <button type="button" data-action="click->mobile-menu#close" class="p-2 text-gray-700 hover:text-gray-900">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Navigation Links -->
+      <nav class="flex-1 px-4 py-6 space-y-4 overflow-y-auto">
+        <% if Current.participant %>
+          <!-- Event Switcher for mobile -->
+          <% user_participants = Current.participant.user.participants.includes(:event).order("events.created_at DESC") %>
+          <% if user_participants.count > 1 %>
+            <div class="pb-4 border-b">
+              <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Switch Event</label>
+              <%= form_with url: select_event_session_path, method: :post do |f| %>
+                <%= f.select :participant_id,
+                  options_from_collection_for_select(user_participants, :id, :event_name, Current.participant.id),
+                  {},
+                  onchange: "this.form.requestSubmit()",
+                  class: "w-full text-gray-700 font-medium border border-gray-300 rounded-lg px-3 py-2 bg-white" %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if Current.participant.organizer? %>
+            <% if Current.participant.event.active? %>
+              <%= link_to dashboard_event_path(Current.participant.event), class: "block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg font-medium" do %>
+                📊 Dashboard
+              <% end %>
+              <% if Current.participant.event.organizer_participates %>
+                <%= link_to event_path(Current.participant.event), class: "block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg font-medium" do %>
+                  🎁 My Assignment
+                <% end %>
+              <% end %>
+            <% else %>
+              <%= link_to organize_event_path(Current.participant.event), class: "block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg font-medium" do %>
+                📋 My Event
+              <% end %>
+            <% end %>
+          <% else %>
+            <%= link_to event_path(Current.participant.event), class: "block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg font-medium" do %>
+              🎁 My Event
+            <% end %>
+          <% end %>
+
+          <%= link_to wishlist_items_path, class: "block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg font-medium" do %>
+            📝 Wishlist
+          <% end %>
+
+          <%= button_to session_path, method: :delete, class: "w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg font-medium" do %>
+            🚪 Sign Out
+          <% end %>
+        <% else %>
+          <%= link_to "Create Event", new_event_path, class: "block w-full text-center bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-3 rounded-lg" %>
         <% end %>
       </nav>
     </div>
