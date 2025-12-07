@@ -30,4 +30,11 @@ class ApplicationController < ActionController::Base
       redirect_to root_path, alert: "Please log in to continue"
     end
   end
+
+  # Prevent modifications to active or completed events
+  def prevent_if_active
+    if @event&.active? || @event&.completed?
+      redirect_to organize_event_path(@event), alert: "Cannot modify an active or completed event."
+    end
+  end
 end

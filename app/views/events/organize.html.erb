@@ -56,7 +56,7 @@
 
   <!-- Participants Section -->
   <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6">Participants (<span id="participant-count"><%= @participants.count %></span>)</h2>
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Participants (<span id="participant-count"><%= @event.participating_count %></span>)</h2>
 
     <div id="participants-list" class="space-y-3 mb-6">
       <% @participants.each do |participant| %>
@@ -65,7 +65,7 @@
     </div>
 
     <div id="participant-warning">
-      <% if @participants.count < 3 %>
+      <% if @event.participating_count < 3 %>
         <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6">
           ⚠️ You need at least 3 participants to start the Secret Santa.
         </div>
@@ -98,8 +98,8 @@
       </div>
       <p class="text-gray-600 mb-4">Launched on <%= @event.launched_at.strftime("%B %d, %Y at %I:%M %p") %></p>
 
-      <div id="draw-actions">
-        <%= button_to "Reshuffle Assignments", draw_assignments_event_path(@event), method: :post, class: "w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors", data: { turbo_confirm: "This will create new assignments for everyone. Continue?" } %>
+      <div class="bg-gray-50 border border-gray-200 text-gray-600 px-4 py-3 rounded-lg">
+        🔒 Assignments are locked - participants have been notified
       </div>
     <% else %>
       <h2 class="text-2xl font-bold text-gray-900 mb-6">Ready to Launch?</h2>
@@ -107,12 +107,12 @@
 
       <div class="mb-6 space-y-2">
         <div class="flex items-center gap-2 text-sm">
-          <% if @participants.count >= 3 %>
+          <% if @event.participating_count >= 3 %>
             <span class="text-green-600">✓</span>
             <span class="text-gray-700">At least 3 participants added</span>
           <% else %>
             <span class="text-gray-400">○</span>
-            <span class="text-gray-500">Need <%= 3 - @participants.count %> more participant<%= 's' if (3 - @participants.count) != 1 %></span>
+            <span class="text-gray-500">Need <%= 3 - @event.participating_count %> more participant<%= 's' if (3 - @event.participating_count) != 1 %></span>
           <% end %>
         </div>
         <div class="flex items-center gap-2 text-sm">
@@ -126,7 +126,7 @@
           <%= button_to "🚀 Launch Event", launch_event_path(@event), method: :post, class: "w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors", data: { turbo_confirm: "Ready to launch? This will draw assignments and send invitations to all participants." } %>
         <% else %>
           <button disabled class="w-full bg-gray-300 text-gray-500 font-semibold py-4 px-6 rounded-lg cursor-not-allowed">
-            Add at least <%= 3 - @participants.count %> more participant<%= 's' if (3 - @participants.count) != 1 %>
+            Add at least <%= 3 - @event.participating_count %> more participant<%= 's' if (3 - @event.participating_count) != 1 %>
           </button>
         <% end %>
       </div>

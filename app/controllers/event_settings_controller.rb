@@ -1,8 +1,14 @@
 class EventSettingsController < ApplicationController
   before_action :set_event
   before_action :require_organizer
+  before_action :prevent_if_active, only: [ :update ]
 
   def edit
+    # Redirect to dashboard if event is active or completed
+    if @event.active? || @event.completed?
+      redirect_to dashboard_event_path(@event)
+      return
+    end
   end
 
   def update
@@ -33,9 +39,6 @@ class EventSettingsController < ApplicationController
     params.require(:event).permit(
       :theme,
       :custom_message,
-      :require_rsvp,
-      :require_address,
-      :require_wishlist,
       :organizer_participates
     )
   end

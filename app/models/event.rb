@@ -25,9 +25,18 @@ class Event < ApplicationRecord
     participants.find_by(is_organizer: true)
   end
 
+  def participating_count
+    # Count all participants except non-participating organizer
+    if organizer_participates
+      participants.count
+    else
+      participants.where(is_organizer: false).count
+    end
+  end
+
   def ready_to_launch?
     return false if active? || completed?
-    participants.count >= 3
+    participating_count >= 3
   end
 
   def assignments_drawn?

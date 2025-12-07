@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [ :show, :organize, :dashboard, :launch, :draw_assignments, :send_reminder ]
   before_action :require_organizer, only: [ :organize, :dashboard, :launch, :draw_assignments, :send_reminder ]
+  before_action :prevent_if_active, only: [ :draw_assignments ]
 
   def new
     @event = Event.new
@@ -47,7 +48,18 @@ class EventsController < ApplicationController
   end
 
   def organize
-    @participants = @event.participants.order(created_at: :asc)
+    # Redirect to dashboard if event is active or completed
+    if @event.active? || @event.completed?
+      redirect_to dashboard_event_path(@event)
+      return
+    end
+
+    # Show only participating members (exclude non-participating organizer)
+    @participants = if @event.organizer_participates
+      @event.participants.order(created_at: :asc)
+    else
+      @event.participants.where(is_organizer: false).order(created_at: :asc)
+    end
   end
 
   def dashboard
@@ -71,7 +83,8 @@ class EventsController < ApplicationController
     SecretSanta::AssignmentService.new(@event).call
     @event.launch!
 
-    @event.participants.each do |participant|
+    # Only send invitations to participants with assignments (excludes non-participating organizer)
+    @event.participants.with_assignments.each do |participant|
       participant.update_column(:invitation_sent_at, Time.current)
       ParticipantMailer.invitation(participant).deliver_later
     end

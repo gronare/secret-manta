@@ -10,17 +10,30 @@
       <!-- Navigation -->
       <nav class="flex items-center gap-4">
         <% if Current.participant %>
-          <!-- Show relevant link based on user type -->
-          <%
-            if Current.participant.organizer?
-              link_path = Current.participant.event.active? ? dashboard_event_path(Current.participant.event) : organize_event_path(Current.participant.event)
-              link_text = Current.participant.event.active? ? "Dashboard" : "My Event"
-            else
-              link_path = event_path(Current.participant.event)
-              link_text = "My Event"
-            end
-          %>
-          <%= link_to link_text, link_path, class: "text-gray-700 hover:text-gray-900 font-medium" %>
+          <!-- Event Switcher (only show if user has multiple events) -->
+          <% user_participants = Current.participant.user.participants.includes(:event).order("events.created_at DESC") %>
+          <% if user_participants.count > 1 %>
+            <%= form_with url: select_event_session_path, method: :post, class: "inline-block" do |f| %>
+              <%= f.select :participant_id,
+                options_from_collection_for_select(user_participants, :id, :event_name, Current.participant.id),
+                {},
+                onchange: "this.form.requestSubmit()",
+                class: "text-gray-700 hover:text-gray-900 font-medium border border-gray-300 rounded-lg px-3 py-1.5 bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent cursor-pointer" %>
+            <% end %>
+          <% end %>
+
+          <% if Current.participant.organizer? %>
+            <% if Current.participant.event.active? %>
+              <%= link_to "Dashboard", dashboard_event_path(Current.participant.event), class: "text-gray-700 hover:text-gray-900 font-medium" %>
+              <% if Current.participant.event.organizer_participates %>
+                <%= link_to "My Assignment", event_path(Current.participant.event), class: "text-gray-700 hover:text-gray-900 font-medium" %>
+              <% end %>
+            <% else %>
+              <%= link_to "My Event", organize_event_path(Current.participant.event), class: "text-gray-700 hover:text-gray-900 font-medium" %>
+            <% end %>
+          <% else %>
+            <%= link_to "My Event", event_path(Current.participant.event), class: "text-gray-700 hover:text-gray-900 font-medium" %>
+          <% end %>
           <%= link_to "Wishlist", wishlist_items_path, class: "text-gray-700 hover:text-gray-900 font-medium" %>
           <%= button_to "Sign Out", session_path, method: :delete, class: "text-red-600 hover:text-red-700 font-medium" %>
         <% else %>

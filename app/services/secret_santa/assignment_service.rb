@@ -6,7 +6,12 @@ module SecretSanta
 
     def initialize(event)
       @event = event
-      @participants = event.participants.to_a
+      # Only include participating members (exclude non-participating organizer)
+      @participants = if event.organizer_participates
+        event.participants.to_a
+      else
+        event.participants.where(is_organizer: false).to_a
+      end
     end
 
     def call
@@ -19,7 +24,7 @@ module SecretSanta
     private
 
     def validate!
-      count = @event.participants.count
+      count = @participants.count
       raise InsufficientParticipantsError, "Need at least 3 participants" if count < 3
     end
 

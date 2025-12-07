@@ -1,6 +1,7 @@
 class ParticipantsController < ApplicationController
   before_action :set_event
   before_action :require_organizer
+  before_action :prevent_if_active, only: [ :create, :destroy ]
 
   def create
     # Find or create user for this email
