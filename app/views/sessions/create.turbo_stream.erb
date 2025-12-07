@@ -1,0 +1,20 @@
+<%= turbo_stream.update "login_modal_frame" do %>
+  <div class="space-y-6 text-center">
+    <% if @error %>
+      <div class="text-5xl mb-4">❌</div>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Email Not Found</h2>
+      <p class="text-gray-600 mb-4"><%= @error %></p>
+      <button type="button" data-action="click->dialog#close" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors cursor-pointer">
+        Close
+      </button>
+    <% else %>
+      <div class="text-5xl mb-4">📧</div>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Check Your Email!</h2>
+      <p class="text-gray-600 mb-4">We've sent a magic link to your email address. Click the link to sign in.</p>
+      <p class="text-sm text-gray-500 mb-6">The link will expire in 24 hours.</p>
+      <button type="button" data-action="click->dialog#close" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors cursor-pointer">
+        Got it!
+      </button>
+    <% end %>
+  </div>
+<% end %>

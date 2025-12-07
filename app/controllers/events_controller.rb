@@ -36,6 +36,18 @@ class EventsController < ApplicationController
   end
 
   def show
+    # Require login
+    unless Current.participant
+      redirect_to root_path, alert: "Please sign in to view your assignment."
+      return
+    end
+
+    # Redirect if event not active yet
+    unless @event.active? || @event.completed?
+      redirect_to root_path, alert: "Event hasn't been launched yet."
+      return
+    end
+
     # HEY pattern: Access Current directly, no helper method
     @participant = Current.participant
 
@@ -90,7 +102,9 @@ class EventsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to dashboard_event_path(@event), notice: "Event launched! Invitations sent to all participants." }
+      # Redirect to assignment page if organizer participates, otherwise dashboard
+      redirect_path = @event.organizer_participates ? event_path(@event) : dashboard_event_path(@event)
+      format.html { redirect_to redirect_path, notice: "Event launched! Invitations sent to all participants." }
       format.turbo_stream
     end
   rescue SecretSanta::AssignmentService::InsufficientParticipantsError => e

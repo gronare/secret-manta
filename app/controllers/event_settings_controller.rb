@@ -14,7 +14,9 @@ class EventSettingsController < ApplicationController
   def update
     if @event.update(event_settings_params)
       respond_to do |format|
-        format.html { redirect_to organize_event_path(@event), notice: "Settings updated successfully!" }
+        # Redirect to organize for draft events, dashboard for active events
+        redirect_path = @event.active? ? dashboard_event_path(@event) : organize_event_path(@event)
+        format.html { redirect_to redirect_path, notice: "Settings saved successfully!" }
         format.turbo_stream
       end
     else

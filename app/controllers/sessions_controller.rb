@@ -23,9 +23,16 @@ class SessionsController < ApplicationController
       # Send magic link via email
       UserMailer.magic_link(user, magic_link).deliver_later
 
-      redirect_to root_path, notice: "Check your email for a magic link to sign in!"
+      respond_to do |format|
+        format.html { redirect_to root_path, notice: "Check your email for a magic link to sign in!" }
+        format.turbo_stream
+      end
     else
-      redirect_to root_path, alert: "Email not found. Please check your email address."
+      @error = "Email not found. Please check your email address."
+      respond_to do |format|
+        format.html { redirect_to root_path, alert: @error }
+        format.turbo_stream
+      end
     end
   end
 

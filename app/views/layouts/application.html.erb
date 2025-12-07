@@ -31,7 +31,29 @@
     <% if Current.participant %>
       <%= render "layouts/header" %>
     <% end %>
-    <main class="container mx-auto <%= Current.participant ? 'mt-20' : 'mt-8' %> px-5 pb-16 flex-1 flex flex-col">
+
+    <% if flash.any? %>
+      <div class="container mx-auto <%= Current.participant ? 'mt-20' : 'mt-8' %> px-5">
+        <% flash.each do |type, message| %>
+          <% alert_class = case type.to_sym
+               when :notice then "bg-green-50 border-green-200 text-green-800"
+               when :alert then "bg-red-50 border-red-200 text-red-800"
+               when :error then "bg-red-50 border-red-200 text-red-800"
+               else "bg-blue-50 border-blue-200 text-blue-800"
+               end %>
+          <div class="<%= alert_class %> border px-4 py-3 rounded-lg mb-4 relative pr-12" role="alert" data-controller="flash" data-action="click->flash#dismiss">
+            <%= message %>
+            <button type="button" data-action="click->flash#dismiss" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <main class="container mx-auto <%= Current.participant && !flash.any? ? 'mt-20' : flash.any? ? 'mt-4' : 'mt-8' %> px-5 pb-16 flex-1 flex flex-col">
       <%= yield %>
     </main>
     <%= render "layouts/modal" %>
