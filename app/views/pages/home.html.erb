@@ -1,4 +1,4 @@
-<div class="flex-1 flex flex-col items-center justify-center px-4 py-12">
+<div class="flex flex-col items-center justify-center px-4 py-12">
     <!-- Hero Section -->
     <div class="text-center max-w-4xl w-full mb-12">
       <!-- Icon/Logo -->
@@ -34,27 +34,15 @@
 
     <!-- Login Section (only show if not logged in) -->
     <% unless Current.participant %>
-      <div class="w-full max-w-md mb-12">
-        <div class="bg-white rounded-lg shadow-lg p-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-2">Already Have an Event?</h2>
-          <p class="text-gray-600 mb-6">Enter your email to receive a login link</p>
-
-          <%= form_with url: session_path, method: :post, class: "space-y-4" do |f| %>
-            <div>
-              <%= f.email_field :email,
-                  placeholder: "your@email.com",
-                  required: true,
-                  class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg" %>
-            </div>
-
-            <%= f.submit "Send Login Link",
-                class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors cursor-pointer" %>
-          <% end %>
-
-          <p class="text-sm text-gray-500 mt-4 text-center">
-            We'll send a magic link to your email for secure access
-          </p>
-        </div>
+      <div class="mb-12">
+        <p class="text-gray-600 mb-4">Already have an event?</p>
+        <button
+            type="button"
+            data-action="click->dialog#open"
+            data-dialog-turbo-src="<%= new_modal_session_path %>"
+            class="text-blue-600 hover:text-blue-700 font-semibold underline cursor-pointer">
+            Sign in with your email
+        </button>
       </div>
     <% end %>
 

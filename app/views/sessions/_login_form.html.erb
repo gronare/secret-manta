@@ -1,0 +1,25 @@
+<%= turbo_frame_tag "login_modal_frame" do %>
+  <div class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Sign In</h2>
+      <p class="text-gray-600">Enter your email to receive a magic login link</p>
+    </div>
+
+    <%= form_with url: session_path, method: :post, class: "space-y-4" do |f| %>
+      <div>
+        <%= f.email_field :email,
+            placeholder: "your@email.com",
+            required: true,
+            autofocus: true,
+            class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg" %>
+      </div>
+
+      <%= f.submit "Send Login Link",
+          class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors cursor-pointer" %>
+    <% end %>
+
+    <p class="text-sm text-gray-500 text-center">
+      We'll send a magic link to your email for secure access
+    </p>
+  </div>
+<% end %>

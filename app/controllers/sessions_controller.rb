@@ -1,9 +1,14 @@
 class SessionsController < ApplicationController
   # Modern Rails: Using generates_token_for for magic link authentication
-  skip_before_action :set_current_participant, only: [ :new, :create, :authenticate, :select_event ]
+  skip_before_action :set_current_participant, only: [ :new, :create, :authenticate, :select_event, :new_modal ]
 
   def new
     # Show email input for magic link
+  end
+
+  def new_modal
+    # Render the login form for turbo frame in dialog
+    render partial: "sessions/login_form", layout: false
   end
 
   def create

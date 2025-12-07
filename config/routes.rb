@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   # Authentication routes using magic links
   resource :session, only: [ :new, :create, :destroy ] do
+    get :new_modal, on: :collection
     post :select_event, on: :collection
   end
   get "auth/:token", to: "sessions#authenticate", as: :auth

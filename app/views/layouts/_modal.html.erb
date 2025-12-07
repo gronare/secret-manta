@@ -1,0 +1,38 @@
+<!-- Backdrop -->
+<div
+  data-dialog-target="backdrop"
+  data-action="click->dialog#closeOnBackdrop"
+  style="background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9998;"
+  class="hidden">
+</div>
+
+<!-- Modal -->
+<div
+  data-dialog-target="modal"
+  style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; width: 90%; max-width: 28rem;"
+  class="hidden">
+  <div class="bg-white rounded-lg shadow-2xl relative">
+
+    <!-- Close button -->
+    <button
+      type="button"
+      data-action="click->dialog#close"
+      class="absolute -top-2 -right-2 bg-white text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-full p-2 shadow-lg transition-colors"
+      style="z-index: 10;">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+      <span class="sr-only">Close</span>
+    </button>
+
+    <!-- Modal content -->
+    <div class="p-6 sm:p-8">
+      <turbo-frame id="login_modal_frame" data-dialog-target="frame">
+        <!-- Turbo frame will load the login form -->
+      </turbo-frame>
+    </div>
+
+  </div>
+</div>
+
+
